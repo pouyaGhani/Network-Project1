@@ -17,18 +17,35 @@ def dwld(path):
     dwldSocket.close()
 
 
-appSocket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 
-#connection
-appSocket.connect(("127.0.0.1",2121))
 
 while(True):
+    os.system("cls")
+    print('\n\nwelcome to the FTP client:\n\n')
+    print('call one off the follwing functions:')
+    print('HELP              :  SHOW THIS HELP')
+    print('LIST              :  LIST FILES')
+    print('PWD               :  SHOW CURRENT DIR')
+    print('CD dir_name       :  CHANGE DIRECTORY')
+    print('DWLD file_path    :  DWNLOAD FILE')
+    print('QUIT              :  exit\n')
+    print('enter a command: ')
+
+
     msg=input()
-    command,path=msg.split(' ')
+    data=msg.split(' ')
+    command = data[0].lower()
     try:
-        appSocket.send(msg.encode())
-        if command.lower() == "dwld":
-            dwld(path)
+        if command== "list" or command=="help" or command== "cd" or command== "pwd" or command== "dwld":
+            appSocket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+            appSocket.connect(("127.0.0.1",2121))
+            appSocket.send(msg.encode())
+            if command == 'help':
+                os.system("cls")
+                helpServerMsg = appSocket.recv(1024).decode()
+                print(helpServerMsg)
+                input("\nPress Enter to continue ")
+                continue
 
     except:
         print("connection Lost!")

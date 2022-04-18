@@ -2,25 +2,10 @@ import socket
 import random
 import os
 
-# def dwld(path):
-#     randomPort = random.randint(3000,50000)
-#     dwldSocket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-#     dwldSocket.bind(("127.0.0.1",randomPort))
-#     dwldSocket.listen(5)
 
-#     connection.send(str(randomPort).encode())
-#     while 1 :
+def Cd(folder):
+    os.chdir(folder)
 
-#         dateSocket,address = dwldSocket.accept()
-
-#         with open(path, "rb") as file_to_send:
-#             data = file_to_send.read()
-#             dateSocket.sendall(data)
-#         dateSocket.close()
-#         break
-#     print('ASasASas')
-
-#     dwldSocket.close()
 
 
 def Help():
@@ -64,10 +49,12 @@ while True:
     if data[0] == "!":
         break
     elif data[0] == "help":
-        Help()
+        connection.send(Help().encode())
     elif data[0] == "list":
         List()
     elif data[0] == "pwd":
         Pwd()
+    elif data[0] == "cd":
+        Cd(data[1])
 
 connection.close()
