@@ -1,15 +1,11 @@
 import socket
 import random
+import json
 import os
 
 
-def Cd(folder):
-    os.chdir(folder)
-
-
-
 def Help():
-    return "help -> Display a list of commands\nlist -> List of files and their size in a directory\ndwld -> Download files\npwd -> Our current location in a directory\ncd -> Change directory"
+    return 'HELP              :  SHOW THIS HELP\nLIST              :  LIST FILES\nPWD               :  SHOW CURRENT DIR\nCD dir_name       :  CHANGE DIRECTORY\nDWLD file_path    :  DWNLOAD FILE\nQUIT              :  exit'
 
 
 def List():
@@ -25,11 +21,17 @@ def List():
         arr.append(p)
         sizeAllFile += size
     arr.append(sizeAllFile)
-    return arr
+    print(ldr)
+    return json.dumps(arr)
 
 
 def Pwd():
     return os.getcwd()
+
+
+def Cd(folder):
+    os.chdir(folder)
+    return f"Directory change to {folder}"
 
 
 appSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -37,24 +39,28 @@ appSocket.bind(("127.0.0.1", 2121))
 appSocket.listen(1)
 
 # listen for connection
-connection, client = appSocket.accept()
+# connection, client = appSocket.accept()
 
-print(client, "connected")
+# print(client, "connected")
 
 while True:
+    connection, client = appSocket.accept()
     data = connection.recv(64).decode().split(" ")
     data[0] = data[0].lower()
     print("Recieved: ", data)
 
     if data[0] == "!":
         break
+
     elif data[0] == "help":
         connection.send(Help().encode())
-    elif data[0] == "list":
-        List()
-    elif data[0] == "pwd":
-        Pwd()
-    elif data[0] == "cd":
-        Cd(data[1])
 
-connection.close()
+    elif data[0] == "list":
+        print(list())
+        # connection.send(List().encode())
+
+    elif data[0] == "pwd":
+        connection.send(Pwd().encode())
+
+    elif data[0] == "cd":
+        connection.send(Cd(data[1]).encode())
