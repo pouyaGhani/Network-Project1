@@ -27,8 +27,9 @@ print('LIST              :  LIST FILES')
 print('PWD               :  SHOW CURRENT DIR')
 print('CD dir_name       :  CHANGE DIRECTORY')
 print('DWLD file_path    :  DWNLOAD FILE')
-print('QUIT              :  exit\n')
-print('Enter a command: ')
+print('CLEAR             :  CLEAR TERMINAL')
+print('QUIT              :  EXIT\n')
+print('Enter a command: ', end='')
 
 while(True):
 
@@ -36,7 +37,15 @@ while(True):
     data = msg.split(' ')
     command = data[0].lower()
     try:
-        if command == "clear" or command == "list" or command == "help" or command == "cd" or command == "pwd" or command == "dwld":
+        if command == "quit" or command == "clear" or command == "list" or command == "help" or command == "cd" or command == "pwd" or command == "dwld":
+            if command == 'quit':
+                break
+
+            if command == 'clear':
+                os.system("cls")
+                print("\nEnter a command: ", end='')
+                continue
+
             appSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             appSocket.connect(("127.0.0.1", 2121))
             appSocket.send(msg.encode())
@@ -44,28 +53,25 @@ while(True):
                 helpServerMsg = appSocket.recv(1024).decode()
                 print(helpServerMsg)
                 print("\nEnter a command: ", end='')
-                continue
+
             elif command == 'list':
                 helpServerMsg = json.loads(appSocket.recv(4096).decode())
                 for i in range(len(helpServerMsg)-1):
-                    print(i[1] and '>' or ' ', f"\t{i[0]} - {i[2]}b")
+                    print(
+                        f"{helpServerMsg[i][1] and '>' or ' '}\t{helpServerMsg[i][0]} - {helpServerMsg[i][2]}b")
                 print(f"Total directory size: {helpServerMsg[-1]}b")
                 print("\nEnter a command: ", end='')
-                continue
+
             elif command == 'pwd':
                 helpServerMsg = appSocket.recv(512).decode()
                 print(helpServerMsg)
                 print("\nEnter a command: ", end='')
-                continue
+
             elif command == 'cd':
                 helpServerMsg = appSocket.recv(512).decode()
                 print(helpServerMsg)
                 print("\nEnter a command: ", end='')
-                continue
-            elif command == 'clear':
-                os.system("cls")
-                print("\nEnter a command: ", end='')
-                continue
+
         else:
             print("Command not found")
             print("\nEnter a command: ", end='')

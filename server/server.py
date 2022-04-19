@@ -4,8 +4,18 @@ import json
 import os
 
 
+def getFolderSize(start_path='.'):
+    total_size = 0
+    for dirpath, dirnames, filenames in os.walk(start_path):
+        for f in filenames:
+            fp = os.path.join(dirpath, f)
+            if not os.path.islink(fp):
+                total_size += os.path.getsize(fp)
+    return total_size
+
+
 def Help():
-    return 'HELP              :  SHOW THIS HELP\nLIST              :  LIST FILES\nPWD               :  SHOW CURRENT DIR\nCD dir_name       :  CHANGE DIRECTORY\nDWLD file_path    :  DWNLOAD FILE\nQUIT              :  exit'
+    return "HELP              :  SHOW THIS HELP\nLIST              :  LIST FILES\nPWD               :  SHOW CURRENT DIR\nCD dir_name       :  CHANGE DIRECTORY\nDWLD file_path    :  DWNLOAD FILE\nCLEAR             :  CLEAR TERMINAL\nQUIT              :  EXIT\n"
 
 
 def List():
@@ -14,14 +24,14 @@ def List():
     ldr = os.listdir(Pwd())
     for i in ldr:
         p = []
-        size = os.stat(i).st_size
+        size = getFolderSize(f"{Pwd()}\{i}") if os.path.isdir(
+            i) else os.stat(i).st_size
         p.append(i)
         p.append(os.path.isdir(i))
         p.append(size)
         arr.append(p)
         sizeAllFile += size
     arr.append(sizeAllFile)
-    print(ldr)
     return json.dumps(arr)
 
 
@@ -56,8 +66,7 @@ while True:
         connection.send(Help().encode())
 
     elif data[0] == "list":
-        print(list())
-        # connection.send(List().encode())
+        connection.send(List().encode())
 
     elif data[0] == "pwd":
         connection.send(Pwd().encode())
