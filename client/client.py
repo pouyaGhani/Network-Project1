@@ -1,3 +1,4 @@
+import random
 import socket
 import json
 import os
@@ -36,6 +37,7 @@ while(True):
     msg = input()
     data = msg.split(' ')
     command = data[0].lower()
+
     try:
         if command == "quit" or command == "clear" or command == "list" or command == "help" or command == "cd" or command == "pwd" or command == "dwld":
             if command == 'quit':
@@ -72,6 +74,20 @@ while(True):
                 print(helpServerMsg)
                 print("\nEnter a command: ", end='')
 
+            elif command == 'dwld':
+                dwldPortNumber = appSocket.recv(512).decode()
+                socket1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                socket1.connect(('127.0.0.1',int(dwldPortNumber) ))
+                socket1.send(data[1].encode())
+                with open(os.path.join(os.getcwd(), 'downloaded.txt'), 'wb') as file_to_write:
+                    while 1:
+                        data2 = socket1.recv(1024)
+                        if not data2:
+                            break
+                        file_to_write.write(data2)
+                    file_to_write.close()
+                socket1.close()
+            appSocket.close()
         else:
             print("Command not found")
             print("\nEnter a command: ", end='')
