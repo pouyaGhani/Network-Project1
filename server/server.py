@@ -21,10 +21,10 @@ def Help():
 def List():
     sizeAllFile = 0
     arr = []
-    ldr = os.listdir(Pwd())
+    ldr = os.listdir(os.getcwd())
     for i in ldr:
         p = []
-        size = getFolderSize(f"{Pwd()}\{i}") if os.path.isdir(
+        size = getFolderSize(f"{os.getcwd()}\{i}") if os.path.isdir(
             i) else os.stat(i).st_size
         p.append(i)
         p.append(os.path.isdir(i))
@@ -36,19 +36,20 @@ def List():
 
 
 def Pwd():
-    return os.getcwd()
+    loc = f"{os.getcwd()}\\"
+    i = loc.find("files")
+    return loc[i+5:] if i != -1 else "\\"
 
 
-def Cd(folder):
+def Cd(folder, location):
+    folder = folder.replace("/", "\\")
     cdOrders = str(folder).split("\\")
-    print(cdOrders)
     for order in cdOrders:
-        if(str(Pwd()) == "C:\\Users\\Admin\\Desktop\\project\\server"):
+        if(str(os.getcwd()) == location):
             if order == "..":
-                print('salam')
                 return "-1"
             os.chdir(order)
-        else :
+        else:
             os.chdir(order)
     return f"Directory change to {folder}"
 
@@ -56,14 +57,16 @@ def Cd(folder):
 appSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 appSocket.bind(("127.0.0.1", 2121))
 appSocket.listen(1)
-
-
+os.chdir("files")
+location = os.getcwd()
+print("\nWaiting for connecting a client...")
+print("\nServer listening on 0.0.0.0:2121")
 
 while True:
     connection, client = appSocket.accept()
     data = connection.recv(64).decode().split(" ")
     command = data[0].lower()
-    print("Recieved: ", data)
+    print(f"Recieved: {' '.join(data)}")
 
     if data[0] == "!":
         break
@@ -78,23 +81,23 @@ while True:
         connection.send(Pwd().encode())
 
     elif command == "cd":
-        msg = Cd(data[1])
+        msg = Cd(data[1], location)
         if(msg == "-1"):
             connection.send('Access denied!'.encode())
-        else :
+        else:
             connection.send(msg.encode())
+
     elif command == "dwld":
-        dwoldPortNumber = random.randint(3000,50000)
+        dwoldPortNumber = random.randint(3000, 50000)
         connection.send(str(dwoldPortNumber).encode())
         socket1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        socket1.bind(('127.0.0.1',dwoldPortNumber ))
+        socket1.bind(('127.0.0.1', dwoldPortNumber))
         socket1.listen(5)
         while 1:
             conn, addr = socket1.accept()
             with open(data[1], 'rb') as file_to_send:
                 data2 = file_to_send.read()
                 conn.sendall(data2)
-            #file_to_send.close()
             conn.close()
             break
         socket1.close()

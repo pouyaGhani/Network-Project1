@@ -3,7 +3,6 @@ import socket
 import json
 import os
 
-
 os.system("cls")
 print('welcome to the FTP client:\n')
 print('call one off the follwing functions:')
@@ -38,7 +37,7 @@ while(True):
             if command == 'help':
                 helpServerMsg = appSocket.recv(1024).decode()
                 print(helpServerMsg)
-                print("\nEnter a command: ", end='')
+                print("Enter a command: ", end='')
 
             elif command == 'list':
                 helpServerMsg = json.loads(appSocket.recv(4096).decode())
@@ -59,27 +58,24 @@ while(True):
                 print("\nEnter a command: ", end='')
 
             elif command == 'dwld':
-                #while True:
-                    dwldPortNumber = appSocket.recv(1024).decode()
-                    socket1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                    socket1.connect(('127.0.0.1',int(dwldPortNumber) ))
-                #socket1.send(data[1].encode())
-                    with open(os.path.join(os.getcwd(), str(data[1])), 'wb') as file_to_write:
-                        while 1:
-                            data2 = socket1.recv(1024)
-                            if not data2:
-                                break
-                            file_to_write.write(data2)
-                        file_to_write.close()
-                    socket1.close()
-                    print('file downloaded successfuly!')
-                    print("\nEnter a command: ", end='')
+                dwldPortNumber = appSocket.recv(1024).decode()
+                socket1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                socket1.connect(('127.0.0.1', int(dwldPortNumber)))
+                with open(os.path.join(os.getcwd(), str(data[1])), 'wb') as file_to_write:
+                    while 1:
+                        data2 = socket1.recv(1024)
+                        if not data2:
+                            break
+                        file_to_write.write(data2)
+                    file_to_write.close()
+                socket1.close()
+                print('file downloaded successfuly!')
+                print("\nEnter a command: ", end='')
 
-                   # break
         else:
             print("Command not found")
             print("\nEnter a command: ", end='')
 
     except:
-        print("connection Lost!")
+        print("Connection lost!")
         break
