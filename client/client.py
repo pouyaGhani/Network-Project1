@@ -4,22 +4,6 @@ import json
 import os
 
 
-def dwld(path):
-    print('asd')
-    receivedPort = appSocket.recv(1024).decode()
-    dwldSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    dwldSocket.connect(("127.0.0.1", int(receivedPort)))
-    print(receivedPort)
-    with open(path, 'wb') as file_to_write:
-        while True:
-            data = dwldSocket.recv(1024)
-            if not data:
-                break
-            file_to_write.write(data)
-        file_to_write.close()
-    dwldSocket.close()
-
-
 os.system("cls")
 print('welcome to the FTP client:\n')
 print('call one off the follwing functions:')
@@ -75,19 +59,23 @@ while(True):
                 print("\nEnter a command: ", end='')
 
             elif command == 'dwld':
-                dwldPortNumber = appSocket.recv(512).decode()
-                socket1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                socket1.connect(('127.0.0.1',int(dwldPortNumber) ))
-                socket1.send(data[1].encode())
-                with open(os.path.join(os.getcwd(), 'downloaded.txt'), 'wb') as file_to_write:
-                    while 1:
-                        data2 = socket1.recv(1024)
-                        if not data2:
-                            break
-                        file_to_write.write(data2)
-                    file_to_write.close()
-                socket1.close()
-            appSocket.close()
+                #while True:
+                    dwldPortNumber = appSocket.recv(1024).decode()
+                    socket1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    socket1.connect(('127.0.0.1',int(dwldPortNumber) ))
+                #socket1.send(data[1].encode())
+                    with open(os.path.join(os.getcwd(), str(data[1])), 'wb') as file_to_write:
+                        while 1:
+                            data2 = socket1.recv(1024)
+                            if not data2:
+                                break
+                            file_to_write.write(data2)
+                        file_to_write.close()
+                    socket1.close()
+                    print('file downloaded successfuly!')
+                    print("\nEnter a command: ", end='')
+
+                   # break
         else:
             print("Command not found")
             print("\nEnter a command: ", end='')

@@ -88,16 +88,13 @@ while True:
         connection.send(str(dwoldPortNumber).encode())
         socket1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         socket1.bind(('127.0.0.1',dwoldPortNumber ))
-        socket1.listen(1)
-        conn, addr = socket1.accept()
-        #while (1):
-        reqFile = conn.recv(1024)
-        with open(reqFile, 'rb') as file_to_send:
-            while 1 :
-
-                data2 = file_to_send.read(1024)
-                if not data2 :
-                    break
-                conn.send(data2)
-            file_to_send.close()
-        conn.close()
+        socket1.listen(5)
+        while 1:
+            conn, addr = socket1.accept()
+            with open(data[1], 'rb') as file_to_send:
+                data2 = file_to_send.read()
+                conn.sendall(data2)
+            #file_to_send.close()
+            conn.close()
+            break
+        socket1.close()
