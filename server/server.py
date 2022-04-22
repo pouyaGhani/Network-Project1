@@ -92,6 +92,7 @@ while True:
         connection.send(str(dwoldPortNumber).encode())
         socket1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         socket1.bind(('127.0.0.1', dwoldPortNumber))
+        # socket1.bind(('127.0.0.1', 35600))
         socket1.listen(5)
         while 1:
             conn, addr = socket1.accept()

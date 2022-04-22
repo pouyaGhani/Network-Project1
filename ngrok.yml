@@ -1,0 +1,9 @@
+version: "2"
+authtoken: 2889YWkFiBROmmwy3JXvDCbBiEs_r2ii43RCFmqRtnDiwCH7
+tunnels:
+  first:
+    addr: 2121
+    proto: tcp
+  second:
+    addr: 35600
+    proto: tcp

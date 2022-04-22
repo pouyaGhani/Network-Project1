@@ -33,6 +33,7 @@ while(True):
 
             appSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             appSocket.connect(("127.0.0.1", 2121))
+            # appSocket.connect(("8.tcp.ngrok.io", 15677))
             appSocket.send(msg.encode())
             if command == 'help':
                 helpServerMsg = appSocket.recv(1024).decode()
@@ -61,6 +62,7 @@ while(True):
                 dwldPortNumber = appSocket.recv(1024).decode()
                 socket1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 socket1.connect(('127.0.0.1', int(dwldPortNumber)))
+                # socket1.connect(('8.tcp.ngrok.io', 35600))
                 with open(os.path.join(os.getcwd(), str(data[1])), 'wb') as file_to_write:
                     while 1:
                         data2 = socket1.recv(1024)
